@@ -8,6 +8,7 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
+MYSQL_HOST=mysql.daws78s.online
 
 VALIDATE(){
    if [ $1 -ne 0 ]
@@ -75,3 +76,13 @@ VALIDATE $? "Starting shipping"
 
 dnf install mysql -y &>> $LOGFILE
 VALIDATE $? "Installing MySQL"
+
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e "use cities" &>> $LOGFILE
+if [ $? -ne 0 ]
+then
+    echo "Schema is ... LOADING"
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/schema/shipping.sql &>> $LOGFILE
+    VALIDATE $? "Loading schema"
+else
+    echo "Schema already exists... $Y SKIPPING $N"
+fi
