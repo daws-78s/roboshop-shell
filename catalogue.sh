@@ -30,37 +30,37 @@ fi
 dnf module disable nodejs -y &>> $LOGFILE
 VALIDATE $? "Disabling current nodejs"
 
-dnf module enable nodejs:20 -y
+dnf module enable nodejs:20 -y &>> $LOGFILE
 VALIDATE $? "Enabling nodejs:20"
 
-dnf install nodejs -y
+dnf install nodejs -y &>> $LOGFILE
 VALIDATE $? "Installing NodeJS"
 
-useradd roboshop
+useradd roboshop &>> $LOGFILE
 VALIDATE $? "Adding roboshop user"
 
-mkdir /app
+mkdir /app &>> $LOGFILE
 VALIDATE $? "Creating app directory"
 
-curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip
+curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip &>> $LOGFILE
 VALIDATE $? "downloading catalogue application"
 
-cd /app 
+cd /app  &>> $LOGFILE
 VALIDATE $? "Moving to app directory"
 
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip &>> $LOGFILE
 VALIDATE $? "extracting catalogue"
 
-npm install 
+npm install &>> $LOGFILE
 VALIDATE $? "Installing dependencies"
 
-cp /home/ec2-user/roboshop-shell/catalogue.service /etc/systemd/system/catalogue.service
+cp /home/ec2-user/roboshop-shell/catalogue.service /etc/systemd/system/catalogue.service &>> $LOGFILE
 
-systemctl daemon-reload
+systemctl daemon-reload &>> $LOGFILE
 VALIDATE $? "Daemon reload"
 
-systemctl enable catalogue
+systemctl enable catalogue &>> $LOGFILE
 VALIDATE $? "Enable catalogue"
 
-systemctl start catalogue
+systemctl start catalogue &>> $LOGFILE
 VALIDATE $? "Start catalogue"
