@@ -8,6 +8,7 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
+MONGO_HOST=mongodb.daws78s.online
 
 VALIDATE(){
    if [ $1 -ne 0 ]
@@ -80,3 +81,13 @@ VALIDATE $? "Copying mongo repo"
 dnf install -y mongodb-mongosh &>> $LOGFILE
 VALIDATE $? "Installing mongo client"
 
+SCHEMA_EXISTS=$(mongosh --host $MONGO_HOST --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
+
+if [ $SCHEMA_EXISTS -lt 0 ]
+then
+    echo "Schema does not exists ... LOADING"
+    mongosh --host $MONGO_HOST </app/schema/catalogue.js
+    VALIDATE $? "Loading catalogue data"
+else
+    echo -e "schema already exists... $Y SKIPPING $N"
+fi
